@@ -2,6 +2,8 @@
  * Grid
  *
  * The grid class holds the grid of values in a KenKen puzzle.
+ *
+ * @author Michael Bianconi
  */
 package kenken;
 
@@ -15,6 +17,10 @@ public class Grid {
     protected int[][] values;
     protected ArrayList<Integer> unique_values;
  
+    /**
+     * Constructor for the Grid class.
+     * @param size The boards will always be squares with this length
+     */
     public Grid(int size) {
         this.size = size;
         this.values = new int[size][size];
@@ -43,6 +49,8 @@ public class Grid {
      * overflow, but it'll take awhile.
      * @param row Row to fill.
      * @param col Column to fill.
+     * @return Will return true if all tiles are valid. Since it's recursive, if
+     *         the top level returns false, something went wrong.
      */
     protected boolean fillValues(int row, int col) {
 
@@ -90,9 +98,6 @@ public class Grid {
     /**
      * Check if the current value in the values array conflicts with other
      * values in the same row and column.
-     * 1 2 3
-     * 2 3 1
-     * 3 1 2
      * @param row y-coordinate
      * @param col x-coordinate
      * @return True if valid
