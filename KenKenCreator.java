@@ -33,7 +33,9 @@ public class KenKenCreator {
     public static void main(String[] args) {
         Grid myKenKenBoard = new Grid(Integer.parseInt(args[0]));
         myKenKenBoard.fillValues();
-        ArrayList<Region> myKenKenRegions = generateRegions(myKenKenBoard);
+        myKenKenBoard.generateRegions();
+
+        myKenKenBoard.printRegions();
     }
 
 }

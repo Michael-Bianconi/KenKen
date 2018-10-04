@@ -14,8 +14,10 @@ import java.util.Arrays;
 public class Grid {
 
     protected int size; // x, in a grid with x rows and x columns.
-    protected int[][] values;
-    protected ArrayList<Integer> unique_values;
+    protected int[][] values; // the solution's values
+    protected int[][] regions; // the region numbers
+    protected ArrayList<Integer> unique_values; // all numbers 1 through N
+
  
     /**
      * Constructor for the Grid class.
@@ -24,6 +26,7 @@ public class Grid {
     public Grid(int size) {
         this.size = size;
         this.values = new int[size][size];
+        this.regions = new int[size][size];
         this.unique_values = new ArrayList<Integer>(size);
 
         for (int i = 1; i <= size; i++) {
@@ -31,6 +34,7 @@ public class Grid {
         }
     }
 
+    //== VALUE FUNCTIONS =====================================================//
     /**
      * Starter method for fillValues, calls with (0,0).
      */
@@ -60,7 +64,7 @@ public class Grid {
         }
 
         // Seed the new random, and copy over a fresh set of unique values
-        Random rand = new Random(0);
+        Random rand = new Random();
         ArrayList<Integer> uniques = new ArrayList<Integer>(this.unique_values);
 
         // Having created an ArrayList with all values 1...N, randomly choose
@@ -129,6 +133,134 @@ public class Grid {
         for (int y = 0; y < this.size; y++) {
             for (int x = 0; x < this.size; x++) {
                 System.out.printf("%d ", this.values[y][x]);
+            }
+
+            System.out.println("");
+        }
+    }
+
+    //== REGION FUNCTIONS ====================================================//
+    /**
+     * Sprinkle single tile regions across the board, and then recursively
+     * expand them until the grid is filled.
+     * @see sprinkleRegions
+     * @see generateRegionsRecursive
+     */
+    public void generateRegions() {
+
+        sprinkleRegions();
+
+        if (!generateRegionsRecursive()) {
+            System.out.println("Something went wrong!");
+        }
+    }
+
+    /**
+     * Generate the regions of the grid. Do so randomly selecting single tiles
+     * in the grid, placing different regions, then going through again and
+     * expanding those regions until all spaces are filled.
+     * @param row x-coordinate to generate
+     * @param col y-coordinate to generate
+     * @param num region num (value in this.regions array)
+     * @return true if generation is completed.
+     */
+    protected boolean generateRegionsRecursive() {
+
+        ArrayList<Integer> expanded_regions = new ArrayList<Integer>(this.size);
+
+        for (int y = 0; y < this.size; y++) {
+            for (int x = 0; x < this.size; x++) {
+
+                // get the current region number
+                int region = this.regions[y][x];
+
+                // this tile has a region in it that hasn't been expanded yet
+                if (region != 0 && !expanded_regions.contains(region)) {
+
+                    // if we can expand it into an empty tile
+                    if (findAndExpandRegion(y, x)) {
+
+                        // mark off this region as expanded
+                        expanded_regions.add(region);
+                    }
+                }
+            }
+        }
+
+        // There are no more tiles to expand into
+        if (expanded_regions.size() == 0) {
+            return true;
+        }
+
+        // There are more tiles to expand into
+        else {
+            return generateRegionsRecursive();
+        }
+    }
+
+    /**
+     * Randomly place 2N - 1 region spots around the board.
+     */
+    protected void sprinkleRegions() {
+        Random rand = new Random();
+
+        for (int i = 1; i < (this.size * 2); i++) {
+
+            int row = rand.nextInt(this.size);
+            int col = rand.nextInt(this.size);
+            int region_number = i;
+
+            this.regions[row][col] = region_number;
+        }
+    }
+
+    /**
+     * Given a grid coordinate, find an empty (zero) adjacent tile and
+     * expand the region into it.
+     * @param row x-coordinate
+     * @param col y-coordinate
+     * @return true if the region could be expanded
+     */
+    protected boolean findAndExpandRegion(int row, int col) {
+        int region_num = this.regions[row][col];
+
+        // north
+        if (row > 0 && this.regions[row-1][col] == 0) {
+            this.regions[row-1][col] = region_num;
+            return true;
+        }
+
+        // south
+        else if (row < this.size - 1 && this.regions[row+1][col] == 0) {
+            this.regions[row+1][col] = region_num;
+            return true;
+        }
+
+        // east
+        else if (col < this.size - 1 && this.regions[row][col+1] == 0) {
+            this.regions[row][col+1] = region_num;
+            return true;
+        }
+
+        // west
+        else if (col > 0 && this.regions[row][col-1] == 0) {
+            this.regions[row][col-1] = region_num;
+            return true;
+        }
+
+        // no empty tiles
+        else {
+            return false;
+        }
+    }
+
+    /**
+     * Print out the regions grid.
+     */
+    public void printRegions() {
+        for (int y = 0; y < this.size; y++) {
+            for (int x = 0; x < this.size; x++) {
+                System.out.printf("%d ", this.regions[y][x]);
             }
 
             System.out.println("");
