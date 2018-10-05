@@ -27,10 +27,6 @@
  * assigns them operators. Finally, it performs the operations and list the
  * result as the target value.
  *
- * Afterwards, of course, it clears the values.
- *
- * Next step: Compile a list of the regions and generate their ops and targets.
- *
  * @author Michael Bianconi
  */
 
@@ -69,7 +65,13 @@ public class KenKenCreator {
 
         else if (args.length == 3) {
             solve = true;
-            filename = args[2];
+            if (args[1].equals("-s")) {
+                filename = args[2];
+            }
+
+            else {
+                filename = args[1];
+            }
         }
 
         // redirect to file
