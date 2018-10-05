@@ -14,8 +14,9 @@ import java.util.Arrays;
 public class Grid {
 
     protected int size; // x, in a grid with x rows and x columns.
+    protected int num_regions;
     protected int[][] values; // the solution's values
-    protected int[][] regions; // the region numbers
+    protected int[][] regions; // the region numbers (regions start at 1!)
     protected ArrayList<Integer> unique_values; // all numbers 1 through N
 
  
@@ -27,6 +28,7 @@ public class Grid {
         this.size = size;
         this.values = new int[size][size];
         this.regions = new int[size][size];
+        this.num_regions = (2 * size) - 1;
         this.unique_values = new ArrayList<Integer>(size);
 
         for (int i = 1; i <= size; i++) {
@@ -34,12 +36,45 @@ public class Grid {
         }
     }
 
+    //== ACCESSORS ===========================================================//
+    /**
+     * Get the values grid.
+     * @return Return the values grid.
+     */
+    public int[][] getValues() {
+        return this.values;
+    }
+
+    /**
+     * Get the regions grid.
+     * @return Return the regions grid.
+     */
+    public int[][] getRegions() {
+        return this.regions;
+    }
+
+    /**
+     * Get the grid size.
+     * @return Size of the grid.
+     */
+    public int getSize() {
+        return this.size;
+    }
+
+    /**
+     * Get the number of regions.
+     * @return Return the number of regions.
+     */
+    public int getNumRegions() {
+        return this.num_regions;
+    }
+
     //== VALUE FUNCTIONS =====================================================//
     /**
-     * Starter method for fillValues, calls with (0,0).
+     * Starter method for generateValues, calls with (0,0).
      */
-    public void fillValues() {
-        if (!fillValues(0,0)) {
+    public void generateValues() {
+        if (!generateValues(0,0)) {
             System.out.println("Something went wrong");
         }
     }
@@ -48,15 +83,16 @@ public class Grid {
      * Fill the values array with unique digits such that each row and column
      * in the array contains all integers from 1 to this.size.
      * This is done recursively and slowly, but hey, it works. It's fine for
-     * grids under size 10, gets a little slow between 10 and 14, and then
-     * it shits itself. It'll still run, assuming it doesn't reach a stack
-     * overflow, but it'll take awhile.
+     * grids under size 30.
+     * Over 30 it shits itself, not sure why. It might be recursion levels, or
+     * maybe I'm just not waiting long enough. Although to be fair, I'm not
+     * sure size 30 KenKen puzzles are even solvable by humans.
      * @param row Row to fill.
      * @param col Column to fill.
      * @return Will return true if all tiles are valid. Since it's recursive, if
      *         the top level returns false, something went wrong.
      */
-    protected boolean fillValues(int row, int col) {
+    protected boolean generateValues(int row, int col) {
 
         // we've reached the end of the grid
         if (row == size) {
@@ -79,13 +115,13 @@ public class Grid {
 
             // so, we found a value that works with the current grid
             // next, find the next grid position to work on
-            // call fillValues on that tile. If fillValues returns true,
+            // call generateValues on that tile. If generateValues returns true,
             // we're done. All recursions will return true at once.
             if (checkValidValue(row, col)) {
                 int next_row = (col == this.size-1) ? row + 1 : row;
                 int next_col = (col == this.size-1) ? 0 : col + 1;
 
-                if (fillValues(next_row, next_col)) {
+                if (generateValues(next_row, next_col)) {
                     return true;
                 }
             }
@@ -156,9 +192,8 @@ public class Grid {
     }
 
     /**
-     * Generate the regions of the grid. Do so randomly selecting single tiles
-     * in the grid, placing different regions, then going through again and
-     * expanding those regions until all spaces are filled.
+     * Go through the grid, expanding each region by 1 tile. Repeat until no
+     * tiles remain.
      * @param row x-coordinate to generate
      * @param col y-coordinate to generate
      * @param num region num (value in this.regions array)
@@ -204,10 +239,18 @@ public class Grid {
     protected void sprinkleRegions() {
         Random rand = new Random();
 
-        for (int i = 1; i < (this.size * 2); i++) {
+        for (int i = 1; i <= this.num_regions; i++) {
+
 
             int row = rand.nextInt(this.size);
             int col = rand.nextInt(this.size);
+
+            // dont place a new region on top of an old one
+            while (this.regions[row][col] != 0) {
+                row = rand.nextInt(this.size);
+                col = rand.nextInt(this.size);
+            }
+
             int region_number = i;
 
             this.regions[row][col] = region_number;
