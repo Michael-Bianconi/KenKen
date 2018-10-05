@@ -1,0 +1,1 @@
+typeSearchIndex = [{"p":"kenken","l":"Grid"},{"p":"<Unnamed>","l":"KenKenCreator"},{"p":"kenken","l":"Region"}]

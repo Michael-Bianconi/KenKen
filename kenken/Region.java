@@ -2,6 +2,8 @@
  * KenKenCreator.java
  *
  * This file holds the Region class.
+ *
+ * @author Michael Bianconi
  */
 
 package kenken;
