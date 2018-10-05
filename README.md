@@ -27,25 +27,33 @@ These puzzles are stored in the following format:
 (solution, if requested)
 
 (region 1's target) (region 1's operator)
+
 (region 2's target) (region 2's operator)
+
 (...)
+
 (region N's target) (region N's operator)
 
 (region grid)
 
-Example:
+### Example:
 
 3, 2
 
 1 2 3
+
 3 1 2
+
 2 3 1
 
 10 +
+
 12 *
 
 1 1 1
+
 1 1 2
+
 2 2 2
 
 
