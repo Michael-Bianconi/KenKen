@@ -58,13 +58,11 @@ These puzzles are stored in the following format:
 
 
 ## Running the program
-1. git clone https://www.github.com/Michael-Bianconi/KenKen
+1. $ git clone https://www.github.com/Michael-Bianconi/KenKen
 2. $ cd KenKen
 3. $ javac *.java
 4. $ java KenKenCreator size [-s] [file]
 
         size        size of the grid
-
         -s          show solution
-
         file        output to this file (if not given, print instead)
