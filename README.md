@@ -143,3 +143,12 @@ These puzzles are stored in the following format:
         size        size of the grid
         -s          show solution
         file        output to this file (if not given, print instead)
+
+### NOTE!
+
+Due to overflow, the maximum reliable puzzle size is 6 since a grid of size N,
+a single region with the * operator, will have a target of (N!)^N. The largest
+value Java can hold, without using BigInteger, is 2^63-1, or
+9,223,372,036,854,775,807 (9 quintillion). A grid size of 6 guarantees there
+won't be an overflow. However, you can get up to size 20 before you start
+seeing constant overflows.
