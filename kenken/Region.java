@@ -16,7 +16,7 @@ public class Region {
     
     private int region_number;
     private char operator;
-    private int target;
+    private long target;
     private ArrayList<Integer> values;
 
     //== CONSTRUCTORS ========================================================//
@@ -37,7 +37,7 @@ public class Region {
      */
     public Region(int region_number,
                   char operator,
-                  int target,
+                  long target,
                   ArrayList<Integer> values) {
 
             this.region_number = region_number;
@@ -130,11 +130,11 @@ public class Region {
      * @param op operator to attempt
      * @return the valid target, or -1
      */
-    private int findTarget(char op) {
+    private long findTarget(char op) {
 
         // addition operator, add all values and return
         if (op == '+') {
-            int target = 0;
+            long target = 0;
             for (int v : this.values) {
                 target += v;
             }
@@ -143,7 +143,7 @@ public class Region {
 
         // multiplication operator, multiple all values and return
         else if (op == '*') {
-            int target = 1;
+            long target = 1;
             for (int v : this.values) {
                 target *= v;
             }
@@ -167,15 +167,15 @@ public class Region {
                 }
             }
 
-            int target = max - operand;
+            long target = max - operand;
             return (target < 0) ? -1 : target;
         }
 
         // division operator, take the largest value and divide it by all
         // the others. If the result isn't an integer, return -1.
         else if (op == '/') {
-            int divisor = 1;
-            int max = 1;
+            long divisor = 1;
+            long max = 1;
 
             for (int v : this.values) {
                 if (v > max) {
@@ -217,7 +217,7 @@ public class Region {
      * Get this region's target.
      * @return int
      */
-    public int getTarget() {
+    public long getTarget() {
         return this.target;
     }
 
@@ -241,7 +241,7 @@ public class Region {
     public String toString() {
         return "Region: " + Integer.toString(this.region_number) + "\n" +
                "Operator: " + this.operator + "\n" +
-               "Target: " + Integer.toString(this.target) + "\n" +
+               "Target: " + Long.toString(this.target) + "\n" +
                "Values: " + this.values.toString();
     }
 }
