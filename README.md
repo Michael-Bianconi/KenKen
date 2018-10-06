@@ -147,10 +147,13 @@ These puzzles are stored in the following format:
 ### NOTE!
 
 Due to overflow, the maximum puzzle size is determined by
+
     (N!)^N < 2^63 - 1 --> N = 6
+
 For any N larger than 6, there is possibility for overflow.
 
 #### edit:
  I changed it so overflow errors are caught and the addition operator is used
  instead. Now, the maximum grid size is determined by
+
     N * (sum j, j=1, N) < 2^63 - 1 --> N = 264,225
