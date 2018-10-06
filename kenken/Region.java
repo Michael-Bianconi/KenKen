@@ -142,10 +142,16 @@ public class Region {
         }
 
         // multiplication operator, multiple all values and return
+        // however, if there's an overflow, instead use the '+' operator
         else if (op == '*') {
             long target = 1;
-            for (int v : this.values) {
-                target *= v;
+            try {
+                for (int v : this.values) {
+                    target = Math.multiplyExact(v, target);
+                }
+
+            } catch (ArithmeticException e) {
+                return findTarget('+');
             }
             return target;
         }
